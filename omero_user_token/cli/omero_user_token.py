@@ -8,11 +8,11 @@
 # support@glencoesoftware.com.
 
 import getpass
+import sys
 
 import click
 
-from .. import CONFIG, getter, setter
-
+from .. import CONFIG, getter, setter, checker
 
 TWENTY_FOUR_HOURS_MS = 24 * 60 * 60 * 1000
 
@@ -44,7 +44,7 @@ def cli():
 def _set(server, port, user, time_to_idle):
     password = getpass.getpass("Password: ")
     token = setter(server, port, user, password, time_to_idle)
-    print('Successfuly set token: %s' % token)
+    print('Successfully set token: %s' % token)
 
 
 @click.command()
@@ -54,8 +54,19 @@ def _get():
         print(token)
 
 
+@click.command()
+def _check():
+    token = checker()
+    if token:
+        click.echo(token)
+    else:
+        click.echo("Token not found")
+        sys.exit(1)
+
+
 cli.add_command(_set, name='set')
 cli.add_command(_get, name='get')
+cli.add_command(_check, name='check')
 
 
 def main():

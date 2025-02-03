@@ -38,6 +38,10 @@ def assert_and_get_config_path():
     return os.path.join(token_dir, 'config')
 
 
+def get_token_path():
+    return os.path.join(os.path.expanduser('~'), '.omero_user_token', 'token')
+
+
 CONFIG = ConfigParser()
 CONFIG.read(assert_and_get_config_path())
 
@@ -104,3 +108,10 @@ def getter():
         return token
     except FileNotFoundError:
         sys.exit('ERROR: No token available, `omero_user_token set` required!')
+
+
+def checker():
+    # Return the token without connecting
+    token_path = get_token_path()
+    if os.path.exists(token_path):
+        return get_token()
